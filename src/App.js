@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import Navbar from "./Components/layout/Navbar";
 import Users from "./Components/users/Users";
 import Search from "./Components/users/Search";
+import Alert from "./Components/layout/Alert";
 import axios from "axios";
 import "./App.css";
 
 class App extends Component {
   state = {
     users: [],
-    loading: false
+    loading: false,
+    alert: null
   };
 
   searchUser = async text => {
@@ -23,6 +25,13 @@ class App extends Component {
   // Clear User From State
   clearUsers = () => this.setState({ users: [], loading: false });
 
+  // Set Alert
+  setAlert = (msg, type) => {
+    this.setState({ alert: { msg: msg, type: type } });
+
+    setTimeout(() => this.setState({ alert: null }), 5000);
+  };
+
   render() {
     const { users, loading } = this.state;
 
@@ -30,10 +39,12 @@ class App extends Component {
       <div className="App">
         <Navbar />
         <div className="container">
+          <Alert alert={this.state.alert} />
           <Search
             searchUser={this.searchUser}
             clearUsers={this.clearUsers}
             showClear={users.length > 0 ? true : false}
+            setAlert={this.setAlert}
           />
           <Users loading={loading} users={users} />
         </div>
